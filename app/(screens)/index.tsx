@@ -40,9 +40,6 @@ export default function HomeScreen() {
   return (
     <View className="flex-1 items-center py-4">
       <Text className="font-bold text-2xl">Sepet</Text>
-      <TouchableOpacity onPress={() => router.navigate('/success')}>
-        <Text>Success</Text>
-      </TouchableOpacity>
       <FlatList
         className="w-full"
         data={CartData}
