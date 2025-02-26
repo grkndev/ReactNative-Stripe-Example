@@ -67,14 +67,14 @@ export default function HomeScreen() {
 
   return (
     <View className="flex-1 items-center py-4">
-      <Text className="font-bold text-2xl">Sepet</Text>
+      <Text className="font-bold text-2xl">Cart</Text>
       <FlatList
         className="w-full"
         data={CartData}
         renderItem={({ item }) => <CartItem name={item.name} price={item.price} amount={item.amount} />}
         keyExtractor={(item, index) => index.toString()}
       />
-      <View className="w-full p-4 border-t border-red-200">
+      <View className="w-full p-4 border-t border-zinc-200">
         <CheckoutForm onSuccess={handlePresentModalPress} amount={CartData.reduce((acc, item) => acc + item.price * item.amount, 0)} />
       </View>
 
@@ -109,9 +109,9 @@ function CartItem({
   price: number;
 }) {
   return (
-    <View className="flex-row items-center w-full justify-between p-4 border-b border-red-200">
+    <View className="flex-row items-center w-full justify-between p-4 border-b border-zinc-200">
       <View className="flex-row items-center gap-4">
-        <View className="w-20 rounded-2xl aspect-square bg-red-300" />
+        <View className="w-20 rounded-3xl aspect-square bg-zinc-300" />
         <View>
           <Text className="text-lg font-medium">
             {name}
@@ -121,7 +121,7 @@ function CartItem({
           </Text>
         </View>
       </View>
-      <View className="w-14 aspect-square border border-red-300 rounded-2xl flex-row items-center justify-center">
+      <View className="w-14 aspect-square border border-zinc-300 rounded-2xl flex-row items-center justify-center">
         <Text>
           {amount}
         </Text>

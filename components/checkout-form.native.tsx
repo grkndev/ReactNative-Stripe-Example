@@ -1,7 +1,7 @@
 import * as Linking from 'expo-linking';
 import { useStripe } from "@stripe/stripe-react-native";
 import { useState } from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from "react-native";
 import { useRouter } from 'expo-router';
 
 async function fetchPaymentSheetParams(amount: number): Promise<{
@@ -66,7 +66,10 @@ export default function CheckoutForm({
         const { error } = await presentPaymentSheet();
 
         if (error) {
-            console.log("openPaymentSheet error: ", error);
+            // console.log("openPaymentSheet error: ", error);
+            if (error.code === "Canceled") {
+                Alert.alert("Payment Canceled", "You have canceled the payment process.");
+            }
         } else {
             onSuccess();
         }
@@ -75,17 +78,19 @@ export default function CheckoutForm({
 
 
 
-    return <TouchableOpacity onPress={initializePaymentSheet} disabled={loading} className="disabled:opacity-75 bg-orange-500 w-full p-6 mt-4 rounded-2xl items-center justify-center flex-row">
-        {
-            loading ? (
-                <ActivityIndicator color="white" />
-            ) : (
-                <View className="flex-row items-center justify-between w-full">
-                    <Text className="text-white font-bold text-lg">Ödeme Yap</Text>
-                    <Text className="text-white font-bold text-lg">${amount}</Text>
-                </View>
-            )
-        }
+    return <TouchableOpacity onPress={initializePaymentSheet} disabled={loading} className="disabled:opacity-75 bg-zinc-900 w-full p-6 mt-4 rounded-3xl items-center justify-center flex-row">
+        <View className='flex-1 items-center justify-center fixed'>
+            {
+                loading ? (
+                    <ActivityIndicator color="white" />
+                ) : (
+                    <View className="flex-row items-center justify-between w-full">
+                        <Text className="text-white font-bold text-lg">Checkout</Text>
+                        <Text className="text-white font-bold text-lg">${amount}</Text>
+                    </View>
+                )
+            }
+        </View>
 
     </TouchableOpacity>
 }
