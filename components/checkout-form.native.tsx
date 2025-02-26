@@ -21,7 +21,11 @@ async function fetchPaymentSheetParams(amount: number): Promise<{
 
 export default function CheckoutForm({
     amount,
-}: { amount: number }) {
+    onSuccess,
+}: {
+    amount: number,
+    onSuccess: () => void
+}) {
 
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const [loading, setLoading] = useState(false);
@@ -64,7 +68,7 @@ export default function CheckoutForm({
         if (error) {
             console.log("openPaymentSheet error: ", error);
         } else {
-            router.push("/success");
+            onSuccess();
         }
         setLoading(false);
     }

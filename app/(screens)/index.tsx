@@ -1,6 +1,12 @@
 import CheckoutForm from "@/components/checkout-form.native";
-import { useRouter } from "expo-router";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetModal,
+  BottomSheetView,
+} from '@gorhom/bottom-sheet';
+import { useCallback, useMemo, useRef } from "react";
+import CheckIcon from "@/components/Icons/check";
 
 const CartData = [
   {
@@ -36,7 +42,29 @@ const CartData = [
 ]
 
 export default function HomeScreen() {
-  const router = useRouter();
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  // ref
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["75%"], []);
+
+
+  // renders
+  const renderBackdrop = useCallback(
+    (props: any) => (
+      <BottomSheetBackdrop
+        {...props}
+        disappearsOnIndex={-1}
+        appearsOnIndex={0}
+      />
+    ),
+    []
+  );
+
   return (
     <View className="flex-1 items-center py-4">
       <Text className="font-bold text-2xl">Sepet</Text>
@@ -47,8 +75,26 @@ export default function HomeScreen() {
         keyExtractor={(item, index) => index.toString()}
       />
       <View className="w-full p-4 border-t border-red-200">
-        <CheckoutForm amount={CartData.reduce((acc, item) => acc + item.price * item.amount, 0)} />
+        <CheckoutForm onSuccess={handlePresentModalPress} amount={CartData.reduce((acc, item) => acc + item.price * item.amount, 0)} />
       </View>
+
+      <BottomSheetModal
+        ref={bottomSheetModalRef}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        enableDynamicSizing={false}
+      >
+        <BottomSheetView className="flex-1 items-center justify-center p-8">
+          <View className="flex-col items-center gap-4">
+            <CheckIcon width={128} height={128} color={"#15803d"} />
+            <Text className="font-bold text-2xl text-center">Payment successful!{"\n"}Thank you for choosing us. 🎉</Text>
+          </View>
+          <TouchableOpacity className="bg-zinc-900 w-full p-4 rounded-3xl absolute bottom-8" onPress={() => bottomSheetModalRef.current?.close()}>
+            <Text className="text-center text-white text-lg font-bold">Close</Text>
+          </TouchableOpacity>
+        </BottomSheetView>
+      </BottomSheetModal>
     </View>
   )
 }
